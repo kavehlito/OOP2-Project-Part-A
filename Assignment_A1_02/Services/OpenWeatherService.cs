@@ -14,7 +14,7 @@ namespace Assignment_A1_02.Services
     public class OpenWeatherService
     {
         HttpClient httpClient = new HttpClient();
-        readonly string apiKey = ""; // Your API Key
+        readonly string apiKey = "06108d4761e05b311b258326f90ec128"; // Your API Key
 
         //part of your event code here
         public async Task<Forecast> GetForecastAsync(string City)

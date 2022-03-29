@@ -57,7 +57,7 @@ namespace Assignment_A1_03
                     Console.WriteLine(group.Key.Date.ToShortDateString());
                     foreach (var item in group)
                     {
-                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, teperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
+                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, temperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
                     }
                 }
             }
@@ -78,7 +78,49 @@ namespace Assignment_A1_03
                     Console.WriteLine(group.Key.Date.ToShortDateString());
                     foreach (var item in group)
                     {
-                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, teperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
+                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, temperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"City weather service error");
+                Console.WriteLine($"Error: {exception.Message}");
+            }
+
+            Console.WriteLine("-----------------");
+            if (t3?.Status == TaskStatus.RanToCompletion)
+            {
+                Forecast forecast = t3.Result;
+                Console.WriteLine($"Weather forecast for {forecast.City}");
+                var GroupedList = forecast.Items.GroupBy(item => item.DateTime.Date);
+                foreach (var group in GroupedList)
+                {
+                    Console.WriteLine(group.Key.Date.ToShortDateString());
+                    foreach (var item in group)
+                    {
+                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, temperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
+                    }
+                }
+            }
+            else
+            {
+                Console.WriteLine($"Geolocation weather service error.");
+                Console.WriteLine($"Error: {exception.Message}");
+            }
+
+            Console.WriteLine("-----------------");
+            if (t4.Status == TaskStatus.RanToCompletion)
+            {
+                Forecast forecast = t4.Result;
+                Console.WriteLine($"Weather forecast for {forecast.City}");
+                var GroupedList = forecast.Items.GroupBy(item => item.DateTime.Date);
+                foreach (var group in GroupedList)
+                {
+                    Console.WriteLine(group.Key.Date.ToShortDateString());
+                    foreach (var item in group)
+                    {
+                        Console.WriteLine($"   - {item.DateTime.ToShortTimeString()}: {item.Description}, temperature: {item.Temperature} degC, wind: {item.WindSpeed} m/s");
                     }
                 }
             }

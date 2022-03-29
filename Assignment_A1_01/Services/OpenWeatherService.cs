@@ -1,13 +1,10 @@
-﻿using System;
+﻿using Assignment_A1_01.Models;
+using System;
 using System.Linq;
-using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json; //Requires nuget package System.Net.Http.Json
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text.Json;
 
-using Assignment_A1_01.Models;
 
 namespace Assignment_A1_01.Services
 {
@@ -27,6 +24,27 @@ namespace Assignment_A1_01.Services
             WeatherApiData wd = await response.Content.ReadFromJsonAsync<WeatherApiData>();
 
             //Your Code to convert WeatherApiData to Forecast using Linq.
+
+            Forecast forecast = new Forecast();
+
+            try
+            {
+                forecast.City = wd.city.name;
+                forecast.Items = wd.list.Select(item => new ForecastItem
+                {
+                    DateTime = UnixTimeStampToDateTime(item.dt),
+                    Temperature = item.main.temp,
+                    WindSpeed = item.wind.speed,
+                    Description = item.weather.Select(desc => desc.description).FirstOrDefault().ToString(),
+                    Icon = item.weather.Select(item => item.icon).ToString()
+                }).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
 
             return forecast;
         }

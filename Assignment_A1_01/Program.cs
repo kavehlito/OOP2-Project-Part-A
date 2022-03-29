@@ -1,14 +1,6 @@
-﻿using System;
+﻿using Assignment_A1_01.Services;
+using System;
 using System.Linq;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Json; //Requires nuget package System.Net.Http.Json
-using System.Collections.Generic;
-using System.Threading.Tasks;
-using System.Text.Json;
-
-using Assignment_A1_01.Models;
-using Assignment_A1_01.Services;
 
 namespace Assignment_A1_01
 {
@@ -16,12 +8,28 @@ namespace Assignment_A1_01
     {
         static void Main(string[] args)
         {
-            double latitude = 59.5086798659495;
-            double longitude = 18.2654625932976;
+            double latitude = 59.61366453278328;
+            double longitude = 17.83947069452774;
 
             var t1 = new OpenWeatherService().GetForecastAsync(latitude, longitude);
-            
+
+
             //Your Code
+            
+            Console.WriteLine($"Väderprognos i {t1.Result.City}");
+            foreach (var item in t1.Result.Items.GroupBy(dt => dt.DateTime.Date.ToShortDateString()))
+            {
+                Console.WriteLine(item.Key);
+                foreach (var thing in item)
+                {
+                    Console.WriteLine($"   - {thing.DateTime.ToString("HH:mm")}: {thing.Description}: Temperatur: {thing.Temperature} °C, Vind: {thing.WindSpeed} m/s");
+                }
+            } 
+
+        }
+        static void ReportWeatherAvailable(object sender, (double longitude, double latitude)e)
+        {
+            Console.WriteLine($"New weather forecast for ({e.latitude}, {e.longitude} available");
         }
     }
 }

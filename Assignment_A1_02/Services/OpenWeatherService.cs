@@ -1,13 +1,9 @@
-﻿using System;
-using System.Linq;
-using System.Net;
+﻿using Assignment_A1_02.Models;
+using System;
 using System.Net.Http;
-using System.Net.Http.Json; //Requires nuget package System.Net.Http.Json
-using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Text.Json;
-
-using Assignment_A1_02.Models;
+using System.Linq;
+using System.Net.Http.Json;
 
 namespace Assignment_A1_02.Services
 {
@@ -15,6 +11,14 @@ namespace Assignment_A1_02.Services
     {
         HttpClient httpClient = new HttpClient();
         readonly string apiKey = "06108d4761e05b311b258326f90ec128"; // Your API Key
+
+        public event EventHandler<string> WeatherForecastAvailable;
+        
+        protected virtual void OnWeatherAvailable(string e)
+        {
+            WeatherForecastAvailable?.Invoke(this, e);
+        }
+        
 
         //part of your event code here
         public async Task<Forecast> GetForecastAsync(string City)
@@ -26,7 +30,7 @@ namespace Assignment_A1_02.Services
             Forecast forecast = await ReadWebApiAsync(uri);
 
             //part of your event code here
-
+            OnWeatherAvailable($"New weather forecast for {City} available");
             return forecast;
 
         }
@@ -39,14 +43,37 @@ namespace Assignment_A1_02.Services
             Forecast forecast = await ReadWebApiAsync(uri);
 
             //part of your event code here
-
+            OnWeatherAvailable($"New weather forecast for ({latitude}, {longitude})");
             return forecast;
         }
         private async Task<Forecast> ReadWebApiAsync(string uri)
         {
             // part of your read web api code here
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            WeatherApiData wd = await response.Content.ReadFromJsonAsync<WeatherApiData>();
 
             // part of your data transformation to Forecast here
+            Forecast forecast = new Forecast();
+            try
+            {
+                forecast.City = wd.city.name;
+                forecast.Items = wd.list.Select(item => new ForecastItem
+                {
+                    DateTime = UnixTimeStampToDateTime(item.dt),
+                    Temperature = item.main.temp,
+                    WindSpeed = item.wind.speed,
+                    Description = item.weather.Select(desc => desc.description).FirstOrDefault().ToString(),
+                    Icon = item.weather.Select(item => item.icon).ToString()
+                }).ToList();
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+
+
             return forecast;
         }
         private DateTime UnixTimeStampToDateTime(double unixTimeStamp)

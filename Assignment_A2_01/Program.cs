@@ -1,7 +1,6 @@
-﻿using System;
-
-using Assignment_A2_01.Models;
-using Assignment_A2_01.Services;
+﻿using Assignment_A2_01.Services;
+using System;
+using System.Threading.Tasks;
 
 namespace Assignment_A2_01
 {
@@ -9,6 +8,15 @@ namespace Assignment_A2_01
     {
         static void Main(string[] args)
         {
+            var t1 = new NewsService().GetNewsAsync();
+
+            //Your Code
+
+            Console.WriteLine($"Top Headlines:");
+            foreach (var item in t1.Result.Articles)
+            {
+                    Console.WriteLine($"   - {item.Title}");
+            }
         }
     }
 }

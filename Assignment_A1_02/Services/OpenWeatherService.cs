@@ -19,7 +19,6 @@ namespace Assignment_A1_02.Services
             WeatherForecastAvailable?.Invoke(this, e);
         }
         
-
         //part of your event code here
         public async Task<Forecast> GetForecastAsync(string City)
         {

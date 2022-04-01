@@ -31,7 +31,7 @@ namespace Assignment_A1_03
                 //Create the two tasks and wait for comletion
                 t1 = service.GetForecastAsync(latitude, longitude);
                 t2 = service.GetForecastAsync("Miami");
-                
+
                 Task.WaitAll(t1, t2);
 
                 t3 = service.GetForecastAsync(latitude, longitude);
@@ -130,6 +130,8 @@ namespace Assignment_A1_03
                 Console.WriteLine($"Error: {exception.Message}");
             }
         }
+
+
         static void ReportWeatherDataAvailable(object sender, string message)
         {
             Console.WriteLine($"Event message from weather service: {message}");

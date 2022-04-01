@@ -24,10 +24,34 @@ namespace Assignment_A2_04.Models
             this.category = category;
             timewindow = DateTime.Now.ToString("yyyy-MM-dd-HH-mm");
         }
+        public static void Serialize(News news, string fileName)
+        {
+            var _locker = new object();
+            lock (_locker)
+            {
+                var xs = new XmlSerializer(typeof(News));
+                using (Stream s = File.Create(fname(fileName)))
+                    xs.Serialize(s, news);
+            }
+        }
+        public static News Deserialize(string fileName)
+        {
+            var _locker = new object();
+            lock (_locker)
+            {
+                News news;
+                var xs = new XmlSerializer(typeof(News));
+
+                using (Stream s = File.OpenRead(fname(fileName)))
+                    news = (News)xs.Deserialize(s);
+
+                return news;
+            }
+        }
         static string fname(string name)
         {
-            var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData);
-            documentPath = Path.Combine(documentPath, "AOOP2", "Examples", "CodeExercise cache");
+            var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            documentPath = Path.Combine(documentPath, "Assignment_A2_04", "CodeExercise cache");
             if (!Directory.Exists(documentPath)) Directory.CreateDirectory(documentPath);
             return Path.Combine(documentPath, name);
         }
@@ -39,17 +63,17 @@ namespace Assignment_A2_04.Models
         public NewsCategory Category { get; set; }
         public List<NewsItem> Articles { get; set; }
 
-        public static void Serialize(News news, string fname)
+        public static void Serialize(News news, string fileName)
         {
             var _locker = new object();
             lock (_locker)
             { 
                 var xs = new XmlSerializer(typeof(News));
-                using (Stream s = File.Create(fname))
+                using (Stream s = File.Create(fname(fileName)))
                     xs.Serialize(s, news);
             }
         }
-        public static News Deserialize(string fname)
+        public static News Deserialize(string fileName)
         {
             var _locker = new object();
             lock (_locker)
@@ -57,11 +81,18 @@ namespace Assignment_A2_04.Models
                 News news;
                 var xs = new XmlSerializer(typeof(News));
 
-                using (Stream s = File.OpenRead(fname))
+                using (Stream s = File.OpenRead(fname(fileName)))
                     news = (News)xs.Deserialize(s);
 
                 return news;
             }
+        }
+        static string fname(string name)
+        {
+            var documentPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments);
+            documentPath = Path.Combine(documentPath, "Assignment_A2_04", "CodeExercise cache");
+            if (!Directory.Exists(documentPath)) Directory.CreateDirectory(documentPath);
+            return Path.Combine(documentPath, name);
         }
     }
 }

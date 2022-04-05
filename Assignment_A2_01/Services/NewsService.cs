@@ -1,4 +1,4 @@
-﻿#define UseNewsApiSample  // Remove or undefine to use your own code to read live data
+﻿
 
 using System.Net.Http;
 using System.Net.Http.Json; //Requires nuget package System.Net.Http.Json
@@ -11,7 +11,7 @@ namespace Assignment_A2_01.Services
     public class NewsService
     {
         HttpClient httpClient = new HttpClient();
-        readonly string apiKey = "d318329c40734776a014f9d9513e14ae";
+        readonly string apiKey = "a389335d7a5044a49c01cb03ab5a9267";
         public async Task<NewsApiData> GetNewsAsync()
         {
 

@@ -1,4 +1,4 @@
-﻿#define UseNewsApiSample  // Remove or undefine to use your own code to read live data
+﻿
 
 using Assignment_A2_03.Models;
 using Assignment_A2_03.ModelsSampleData;
@@ -6,6 +6,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Linq;
 using System.Net.Http;
+using System.Net.Http.Json;
 using System.Threading.Tasks;
 namespace Assignment_A2_03.Services
 {
@@ -14,7 +15,7 @@ namespace Assignment_A2_03.Services
         ConcurrentDictionary<(NewsCategory, string), News> _NewsCache = new ConcurrentDictionary<(NewsCategory, string), News>();
 
         HttpClient httpClient = new HttpClient();
-        readonly string apiKey = "d318329c40734776a014f9d9513e14ae";
+        readonly string apiKey = "a389335d7a5044a49c01cb03ab5a9267";
 
         public event EventHandler<string> NewsAvailable;
 
@@ -26,7 +27,17 @@ namespace Assignment_A2_03.Services
         {
 
 #if UseNewsApiSample
-            NewsApiData nd = await NewsApiSampleData.GetNewsApiSampleAsync(category);
+            
+
+#else
+            //https://newsapi.org/docs/endpoints/top-headlines
+            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
+
+           // Your code here to get live data
+           HttpResponseMessage response = await httpClient.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            NewsApiData nd = await response.Content.ReadFromJsonAsync<NewsApiData>();
+            
             News news = new News();
             try
             {
@@ -49,19 +60,13 @@ namespace Assignment_A2_03.Services
             var date = DateTime.Now.ToString("yyyy-MM-dd HH:mm");
             if (!_NewsCache.TryGetValue((category, date), out news1))
             {
-                
+
                 _NewsCache.TryAdd((category, date), news1);
 
                 OnNewsAvailable($"News in category is available: {category}");
             }
             else OnNewsAvailable($"Cached in category is available: {category}");
-            
 
-#else
-            //https://newsapi.org/docs/endpoints/top-headlines
-            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
-
-           // Your code here to get live data
 #endif
 
             return news;

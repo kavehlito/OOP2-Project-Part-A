@@ -1,4 +1,4 @@
-﻿#define UseNewsApiSample  // Remove or undefine to use your own code to read live data
+﻿
 
 using Assignment_A2_02.Models;
 using Assignment_A2_02.ModelsSampleData;
@@ -6,6 +6,7 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using System.Linq;
 using System;
+using System.Net.Http.Json;
 
 namespace Assignment_A2_02.Services
 {
@@ -13,7 +14,7 @@ namespace Assignment_A2_02.Services
     {
         
         HttpClient httpClient = new HttpClient();
-        readonly string apiKey = "d318329c40734776a014f9d9513e14ae";
+        readonly string apiKey = "a389335d7a5044a49c01cb03ab5a9267";
 
         public event EventHandler<string> NewsAvailable;
 
@@ -25,6 +26,16 @@ namespace Assignment_A2_02.Services
         {
 #if UseNewsApiSample      
             NewsApiData nd = await NewsApiSampleData.GetNewsApiSampleAsync(category);
+            
+
+#else
+            //https://newsapi.org/docs/endpoints/top-headlines
+            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
+
+           // Your code here to get live data
+           HttpResponseMessage response = await httpClient.GetAsync(uri);
+           response.EnsureSuccessStatusCode();
+           NewsApiData nd = await response.Content.ReadFromJsonAsync<NewsApiData>();
             News news = new News();
             try
             {
@@ -44,15 +55,6 @@ namespace Assignment_A2_02.Services
                 throw;
             }
             OnNewsAvailable($"News in category is available: {category}");
-
-#else
-            //https://newsapi.org/docs/endpoints/top-headlines
-            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
-
-           // Your code here to get live data
-           HttpResponseMessage response = await httpClient.GetAsync(uri);
-           response.EnsureSuccessStatusCode();
-           NewsApiData nd = await response.Content.ReadFromJsonAsync<NewsApiData>();
 #endif
 
             return news;

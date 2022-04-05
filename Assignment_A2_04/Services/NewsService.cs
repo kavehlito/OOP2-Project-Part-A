@@ -1,4 +1,4 @@
-﻿#define UseNewsApiSample  // Remove or undefine to use your own code to read live data
+﻿
 
 using System;
 using System.Linq;
@@ -15,7 +15,7 @@ namespace Assignment_A2_04.Services
     public class NewsService
     {
         HttpClient httpClient = new HttpClient();
-        readonly string apiKey = "d318329c40734776a014f9d9513e14ae";
+        readonly string apiKey = "a389335d7a5044a49c01cb03ab5a9267";
 
         public event EventHandler<string> NewsAvailable;
 
@@ -28,6 +28,18 @@ namespace Assignment_A2_04.Services
 
 #if UseNewsApiSample      
             NewsApiData nd = await NewsApiSampleData.GetNewsApiSampleAsync(category);
+            
+
+
+
+#else
+            //https://newsapi.org/docs/endpoints/top-headlines
+            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
+
+            // your code to get live data
+            HttpResponseMessage response = await httpClient.GetAsync(uri);
+            response.EnsureSuccessStatusCode();
+            NewsApiData nd = await response.Content.ReadFromJsonAsync<NewsApiData>();
             News news = new News();
             try
             {
@@ -61,15 +73,7 @@ namespace Assignment_A2_04.Services
                 NewsCacheKey.Deserialize(cache.FileName);
                 OnNewsAvailable($"XML Cached news in category is available: {category}");
             }
-            
-            
 
-
-#else
-            //https://newsapi.org/docs/endpoints/top-headlines
-            var uri = $"https://newsapi.org/v2/top-headlines?country=se&category={category}&apiKey={apiKey}";
-
-            // your code to get live data
 #endif
             return news;
         }

@@ -1,4 +1,6 @@
-﻿using Assignment_A1_01.Services;
+﻿// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+using Assignment_A1_01.Services;
 using System;
 using System.Linq;
 

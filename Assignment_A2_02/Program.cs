@@ -1,4 +1,6 @@
-﻿using Assignment_A2_02.Models;
+﻿// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+using Assignment_A2_02.Models;
 using Assignment_A2_02.Services;
 using System;
 using System.Threading.Tasks;

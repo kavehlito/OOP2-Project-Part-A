@@ -1,4 +1,6 @@
-﻿using Assignment_A2_04.Models;
+﻿// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+// Grupp Boule: Kaveh J, Louise L, Alexandra F, Josefine S 
+using Assignment_A2_04.Models;
 using Assignment_A2_04.Services;
 using System;
 using System.Linq;
@@ -42,8 +44,6 @@ namespace Assignment_A2_04
             {
                 Console.WriteLine($"Event message from weather service: {message}");
             }
-            
-
         }
     }
 }
